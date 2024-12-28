@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import database.Constant;
+import model.NguoiDung;
 
 /**
  *
@@ -76,5 +77,27 @@ public class LoginController {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static NguoiDung currentUserInfo(String username){
+        NguoiDung user = new NguoiDung();
+        try {
+                Connection connection = DriverManager.getConnection(Constant.DB_URL, Constant.DB_USERNAME, Constant.DB_PASSWORD);
+                PreparedStatement sql = connection.prepareStatement("select * from nguoidung where tendangnhap = ?");
+                sql.setString(1, username);
+                ResultSet rs = sql.executeQuery();
+                rs.next();
+                user.setMaNguoiDung(rs.getString(1));
+                user.setTenDangNhap(rs.getString(2));
+                user.setMatKhau(rs.getString(3));
+                user.setEmail(rs.getString(4));
+                user.setDiaChi(rs.getString(5));
+                user.setSoDienThoai(rs.getString(6));
+                user.setVaiTro(rs.getString(7));
+                return user;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 }
