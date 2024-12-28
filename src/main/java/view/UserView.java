@@ -4,8 +4,18 @@
  */
 package view;
 
-import javax.swing.JOptionPane;
+import java.sql.Date;
+import java.util.Vector;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+import controller.UserController;
+import database.Constant;
+
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import model.Homestay;
 import model.NguoiDung;
 
 /**
@@ -19,6 +29,8 @@ public class UserView extends javax.swing.JFrame {
      */
     public UserView() {
         initComponents();
+        addListSelectionListener();
+        userViewDayChooser.setDate(new Date(System.currentTimeMillis()));
     }
 
     /**
@@ -43,7 +55,6 @@ public class UserView extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         userViewHomestayNameFld = new javax.swing.JTextField();
         userViewRoomNameFld = new javax.swing.JTextField();
         userViewRoomTypeFld = new javax.swing.JTextField();
@@ -51,8 +62,6 @@ public class UserView extends javax.swing.JFrame {
         userViewBookBtn = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         userViewAddressFld = new javax.swing.JTextArea();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        userViewDetailsFld = new javax.swing.JTextArea();
         userViewFindBtn = new javax.swing.JButton();
         userViewCityCombobox = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
@@ -83,7 +92,7 @@ public class UserView extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Homestay", "Tên phòng", "Loại phòng", "Giá phòng", "Địa chỉ", "Mô tả"
+                "Mã Homestay", "Homestay", "Tên phòng", "Loại phòng", "Giá phòng", "Địa chỉ"
             }
         ));
         jScrollPane1.setViewportView(userViewTable);
@@ -101,8 +110,6 @@ public class UserView extends javax.swing.JFrame {
 
         jLabel8.setText("Giá phòng:");
 
-        jLabel9.setText("Mô tả:");
-
         userViewHomestayNameFld.setEditable(false);
 
         userViewRoomNameFld.setEditable(false);
@@ -118,51 +125,43 @@ public class UserView extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
         userViewAddressFld.setEditable(false);
         userViewAddressFld.setColumns(20);
+        userViewAddressFld.setLineWrap(true);
         userViewAddressFld.setRows(5);
+        userViewAddressFld.setWrapStyleWord(true);
         jScrollPane3.setViewportView(userViewAddressFld);
-
-        userViewDetailsFld.setEditable(false);
-        userViewDetailsFld.setColumns(20);
-        userViewDetailsFld.setRows(5);
-        jScrollPane4.setViewportView(userViewDetailsFld);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addContainerGap()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(userViewHomestayNameFld)
-                        .addComponent(userViewRoomNameFld, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
-                        .addComponent(userViewRoomTypeFld, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
-                        .addComponent(userViewRoomPriceFld, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(204, 204, 204))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(34, 34, 34)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(userViewRoomPriceFld, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                            .addComponent(userViewRoomTypeFld, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(userViewRoomNameFld, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(userViewHomestayNameFld, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(81, 81, 81)
                         .addComponent(jLabel3))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
+                        .addGap(84, 84, 84)
                         .addComponent(userViewBookBtn)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,18 +185,12 @@ public class UserView extends javax.swing.JFrame {
                     .addComponent(userViewRoomPriceFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(43, 43, 43))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(userViewBookBtn)
-                .addContainerGap(12, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(userViewBookBtn)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         userViewFindBtn.setText("Tìm phòng");
@@ -219,7 +212,7 @@ public class UserView extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,8 +226,8 @@ public class UserView extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(94, 94, 94)
                         .addComponent(userViewFindBtn)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,7 +244,9 @@ public class UserView extends javax.swing.JFrame {
                 .addComponent(userViewFindBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane1)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Đặt phòng", jPanel1);
@@ -329,8 +324,13 @@ public class UserView extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(79, 79, 79)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(79, 79, 79)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(logOffBtn)))
                 .addGap(61, 61, 61)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -346,15 +346,9 @@ public class UserView extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(phoneFld, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(updateBtn)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(usernameFld, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(historyBtn)
-                                .addGap(46, 46, 46))))
+                        .addComponent(usernameFld, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -362,12 +356,14 @@ public class UserView extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(typeFLd, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE))))
+                            .addComponent(typeFLd, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(updateBtn)
+                        .addGap(50, 50, 50)
+                        .addComponent(historyBtn)
+                        .addGap(39, 39, 39)))
                 .addGap(45, 45, 45))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(logOffBtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -399,12 +395,13 @@ public class UserView extends javax.swing.JFrame {
                             .addComponent(jLabel14)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45)
+                .addContainerGap(102, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(historyBtn)
-                    .addComponent(updateBtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
-                .addComponent(logOffBtn)
+                    .addComponent(logOffBtn)
+                    .addComponent(updateBtn)
+                    .addComponent(historyBtn))
                 .addContainerGap())
         );
 
@@ -425,11 +422,34 @@ public class UserView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void userViewFindBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userViewFindBtnActionPerformed
-        // TODO add your handling code here:
+        String search = userViewCityCombobox.getSelectedItem() + "";
+        Vector<Homestay> listFind = UserController.find(search);
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new String [] {
+            "Mã Homestay", "Homestay", "Tên phòng", "Loại phòng", "Giá phòng", "Địa chỉ"
+        });
+        for (Homestay hs : listFind) {
+            model.addRow(new Object[] {
+                hs.getMaHomestay(),
+                hs.getTenHomestay(), 
+                hs.getMaPhong(), 
+                hs.getLoaiPhong(),   
+                hs.getGiaPhong(),    
+                hs.getDiaChi()     
+            });
+        }
+        
+        userViewTable.setModel(model);
     }//GEN-LAST:event_userViewFindBtnActionPerformed
 
     private void userViewBookBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userViewBookBtnActionPerformed
-        // TODO add your handling code here:
+        int manguoidung = Integer.parseInt(idFld.getText());
+        int maphong = Integer.parseInt(userViewRoomNameFld.getText());
+        int mahomestay = Integer.parseInt(userViewTable.getModel().getValueAt((int)userViewTable.getSelectedRow(), 0) + "");
+        java.sql.Date ngaynhan = new java.sql.Date(userViewDayChooser.getDate().getTime());
+        UserController.book(maphong, mahomestay, manguoidung, ngaynhan);
+        JOptionPane.showMessageDialog(this, "Đã đặt phòng!");
+        System.out.println(ngaynhan);
     }//GEN-LAST:event_userViewBookBtnActionPerformed
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
@@ -446,6 +466,7 @@ public class UserView extends javax.swing.JFrame {
             emailFld.setEditable(false);
             phoneFld.setEditable(false);
             addressArea.setEditable(false);
+            UserController.update(idFld.getText(), usernameFld.getText(), emailFld.getText(), phoneFld.getText(), addressArea.getText());
             JOptionPane.showMessageDialog(this, "Đã cập nhật");
         }
     }//GEN-LAST:event_updateBtnActionPerformed
@@ -469,6 +490,28 @@ public class UserView extends javax.swing.JFrame {
         phoneFld.setText(user.getSoDienThoai());
         typeFLd.setText(user.getVaiTro());
         addressArea.setText(user.getDiaChi());
+    }
+
+    public void fillFromSelectedRow(){
+        int row = userViewTable.getSelectedRow();
+        if (row >= 0) {
+            userViewHomestayNameFld.setText(userViewTable.getModel().getValueAt(row, 1) + "");
+            userViewRoomNameFld.setText(userViewTable.getModel().getValueAt(row, 2) + "");
+            userViewRoomTypeFld.setText(userViewTable.getModel().getValueAt(row, 3) + "");
+            userViewRoomPriceFld.setText(userViewTable.getModel().getValueAt(row, 4) + "");
+            userViewAddressFld.setText(userViewTable.getModel().getValueAt(row, 5) + "");
+        }
+    }
+
+    private void addListSelectionListener() {
+        userViewTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) { // Đảm bảo rằng sự kiện không phải là sự kiện điều chỉnh
+                    UserView.this.fillFromSelectedRow();
+                }
+            }
+        });
     }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -522,7 +565,6 @@ public class UserView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -530,7 +572,6 @@ public class UserView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton logOffBtn;
     private javax.swing.JTextField phoneFld;
@@ -540,7 +581,6 @@ public class UserView extends javax.swing.JFrame {
     private javax.swing.JButton userViewBookBtn;
     private javax.swing.JComboBox<String> userViewCityCombobox;
     private com.toedter.calendar.JDateChooser userViewDayChooser;
-    private javax.swing.JTextArea userViewDetailsFld;
     private javax.swing.JButton userViewFindBtn;
     private javax.swing.JTextField userViewHomestayNameFld;
     private javax.swing.JTextField userViewRoomNameFld;

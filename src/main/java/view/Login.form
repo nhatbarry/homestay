@@ -77,6 +77,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="loginUsernameFld">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="user1"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
@@ -100,6 +103,12 @@
       </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="loginPasswordFld">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="pass1"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loginPasswordFldActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
